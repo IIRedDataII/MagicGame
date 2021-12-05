@@ -4,7 +4,7 @@ public class Pattern : MonoBehaviour
 {
     
     private const float Delay = 1f / 100f;
-    private const int Step = 10;
+    private const int Step = 1;
     
     [SerializeField] private Material material;
     [SerializeField] private Texture2D pattern;
