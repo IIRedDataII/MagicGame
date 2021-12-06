@@ -37,7 +37,7 @@ Shader "Unlit/MagicC7Shader"
             {
                 if (abs(tex2D(_Heightmap, float2(uv.x - _PatternWidth / (float) _ScreenWidth, uv.y)).r) <= accuracy)
                     return tex2D(_Aether, float2(uv.x - _PatternWidth / (float) _ScreenWidth, uv.y));  // case: no limbo
-                return tex2D(_Aether, float2(pos.x % _PatternHeight / _ScreenWidth, (pos.y + _PatternHeight / 6.f * _CurrentColumn) % _PatternHeight / _ScreenHeight));    // case: limbo
+                return tex2D(_Aether, float2(pos.x % _PatternHeight / _ScreenWidth, (pos.y + _PatternHeight / 7.f * _CurrentColumn) % _PatternHeight / _ScreenHeight));    // case: limbo
             }
 
             float4 find_lookup(float2 pos, int layers, int layerDistance, float accuracy)
