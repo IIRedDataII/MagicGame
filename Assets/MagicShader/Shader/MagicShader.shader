@@ -28,19 +28,19 @@ Shader "Unlit/MagicC7Shader"
             int _ScreenHeight;
 
             
-            bool emptyLookup(float4 lookup)
+            bool empty_lookup(float4 lookup)
             {
                 return all(lookup.xy < float2(0.f, 0.f));
             }
 
-            fixed4 fixLimbo(float2 pos, float2 uv, float accuracy)
+            fixed4 fix_limbo(float2 pos, float2 uv, float accuracy)
             {
                 if (abs(tex2D(_Heightmap, float2(uv.x - _PatternWidth / (float) _ScreenWidth, uv.y)).r) <= accuracy)
                     return tex2D(_Aether, float2(uv.x - _PatternWidth / (float) _ScreenWidth, uv.y));  // case: no limbo
                 return tex2D(_Aether, float2(pos.x % _PatternHeight / _ScreenWidth, (pos.y + _PatternHeight / 6.f * _CurrentColumn) % _PatternHeight / _ScreenHeight));    // case: limbo
             }
 
-            float4 findLookup(float2 pos, int layers, int layerDistance, float accuracy)
+            float4 find_lookup(float2 pos, int layers, int layerDistance, float accuracy)
             {
                 for (int i = layers; i > 0; i--)
                 {
@@ -60,20 +60,20 @@ Shader "Unlit/MagicC7Shader"
                 if (IN.vertex.x < _PatternWidth * _CurrentColumn || IN.vertex.x >= _PatternWidth * (_CurrentColumn+1))
                     return tex2D(_Aether, IN.localTexcoord);   // case: pixel is not in this shader's column
                 
-                int maxDepth = 100; //75;
-                int layers = 100; //75;
+                int maxDepth = 100;
+                int layers = 100;
                 int layerDistance = maxDepth / layers;
 
-                float4 firstLookup = findLookup(IN.vertex.xy, layers, layerDistance, 0.5f / _ScreenWidth);
-                if (emptyLookup(firstLookup))   // case: no first lookup found
-                    return fixLimbo(IN.vertex.xy, IN.localTexcoord.xy, 1.f / layers);  // case: ...
+                float4 firstLookup = find_lookup(IN.vertex.xy, layers, layerDistance, 0.5f / _ScreenWidth);
+                if (empty_lookup(firstLookup))   // case: no first lookup found
+                    return fix_limbo(IN.vertex.xy, IN.localTexcoord.xy, 1.f / layers);  // case: ...
                 
                 if (firstLookup.x < _PatternWidth * _CurrentColumn)
                     return tex2D(_Aether, firstLookup.zw);  // case: no second lookup needed, apply first lookup
                 
-                float4 secondLookup = findLookup(firstLookup.xy, layers, layerDistance, 0.5f / _ScreenWidth);
-                if (emptyLookup(secondLookup))   // case: no second lookup found
-                    return fixLimbo(firstLookup.xy, firstLookup.zw, 1.f / layers);  // case: ...
+                float4 secondLookup = find_lookup(firstLookup.xy, layers, layerDistance, 0.5f / _ScreenWidth);
+                if (empty_lookup(secondLookup))   // case: no second lookup found
+                    return fix_limbo(firstLookup.xy, firstLookup.zw, 1.f / layers);  // case: ...
                 
                 return tex2D(_Aether, secondLookup.zw); // case: second lookup needed, apply second lookup
             }

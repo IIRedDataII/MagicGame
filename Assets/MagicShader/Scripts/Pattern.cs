@@ -4,7 +4,7 @@ public class Pattern : MonoBehaviour
 {
     
     private const float Delay = 1f / 100f;
-    private const int Step = 10;
+    private const int Speed = 10;
     
     [SerializeField] private Material material;
     [SerializeField] private Texture2D pattern;
@@ -23,11 +23,14 @@ public class Pattern : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+            move = !move;
+        
         if (move)
         {
             if (_timePassed >= Delay)
             {
-                _patternOffset += Step;
+                _patternOffset += Speed;
                 if (_patternOffset % _patternWidth == 0)
                     _patternOffset = 0;
                 material.SetInt(Shader.PropertyToID("_PatternOffset"), _patternOffset);
