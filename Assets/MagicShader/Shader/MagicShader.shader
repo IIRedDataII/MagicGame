@@ -37,8 +37,7 @@ Shader "Unlit/MagicC7Shader"
             {
                 if (abs(tex2D(_Heightmap, float2(uv.x - _PatternWidth / (float) _ScreenWidth, uv.y)).r) <= accuracy)
                     return tex2D(_Aether, float2(uv.x - _PatternWidth / (float) _ScreenWidth, uv.y));  // case: no limbo
-                //return tex2D(_Aether, float2((_PatternWidth - pos.x % _PatternWidth) / _ScreenWidth, pos.y / _ScreenHeight));
-                return tex2D(_Aether, float2((pos.x + _PatternWidth / 2.f) % _PatternWidth / _ScreenWidth, pos.y / _ScreenHeight));    // case: limbo
+                return tex2D(_Aether, float2(pos.x % _PatternHeight / _ScreenWidth, (pos.y + _PatternHeight / 6.f * _CurrentColumn) % _PatternHeight / _ScreenHeight));    // case: limbo
             }
 
             float4 findLookup(float2 pos, int layers, int layerDistance, float accuracy)
@@ -61,12 +60,12 @@ Shader "Unlit/MagicC7Shader"
                 if (IN.vertex.x < _PatternWidth * _CurrentColumn || IN.vertex.x >= _PatternWidth * (_CurrentColumn+1))
                     return tex2D(_Aether, IN.localTexcoord);   // case: pixel is not in this shader's column
                 
-                int maxDepth = 75;
-                int layers = 75;
+                int maxDepth = 100; //75;
+                int layers = 100; //75;
                 int layerDistance = maxDepth / layers;
 
                 float4 firstLookup = findLookup(IN.vertex.xy, layers, layerDistance, 0.5f / _ScreenWidth);
-                if (emptyLookup(firstLookup))   // case: no fist lookup found
+                if (emptyLookup(firstLookup))   // case: no first lookup found
                     return fixLimbo(IN.vertex.xy, IN.localTexcoord.xy, 1.f / layers);  // case: ...
                 
                 if (firstLookup.x < _PatternWidth * _CurrentColumn)

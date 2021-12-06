@@ -8,6 +8,7 @@ public class Pattern : MonoBehaviour
     
     [SerializeField] private Material material;
     [SerializeField] private Texture2D pattern;
+    [SerializeField] private bool move;
 
     private int _patternWidth;
     private int _patternOffset;
@@ -22,15 +23,18 @@ public class Pattern : MonoBehaviour
 
     private void Update()
     {
-        if (_timePassed >= Delay)
+        if (move)
         {
-            _patternOffset += Step;
-            if (_patternOffset % _patternWidth == 0)
-                _patternOffset = 0;
-            material.SetInt(Shader.PropertyToID("_PatternOffset"), _patternOffset);
-            _timePassed = 0f;
+            if (_timePassed >= Delay)
+            {
+                _patternOffset += Step;
+                if (_patternOffset % _patternWidth == 0)
+                    _patternOffset = 0;
+                material.SetInt(Shader.PropertyToID("_PatternOffset"), _patternOffset);
+                _timePassed = 0f;
+            }
+            _timePassed += Time.deltaTime;
         }
-        _timePassed += Time.deltaTime;
     }
 
     private void OnDestroy()
