@@ -8,6 +8,7 @@ public class Pattern : MonoBehaviour
     
     [SerializeField] private Material material;
     [SerializeField] private Texture2D pattern;
+    [SerializeField] private Texture2D[] patterns;
     [SerializeField] private bool move;
 
     private int _patternWidth;
@@ -30,9 +31,11 @@ public class Pattern : MonoBehaviour
         {
             if (_timePassed >= Delay)
             {
-                _patternOffset += Speed;
+                material.SetTexture(Shader.PropertyToID("_Pattern"), patterns[Random.Range(0, patterns.Length)]);
+                _patternOffset = Random.Range(0, 300);
+                /*_patternOffset += Speed;
                 if (_patternOffset % _patternWidth == 0)
-                    _patternOffset = 0;
+                    _patternOffset = 0;*/
                 material.SetInt(Shader.PropertyToID("_PatternOffset"), _patternOffset);
                 _timePassed = 0f;
             }
@@ -43,6 +46,7 @@ public class Pattern : MonoBehaviour
     private void OnDestroy()
     {
         material.SetInt(Shader.PropertyToID("_PatternOffset"), 0);
+        material.SetTexture(Shader.PropertyToID("_Pattern"), pattern);
     }
 
 }
