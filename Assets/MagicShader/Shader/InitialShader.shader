@@ -2,8 +2,8 @@ Shader "Unlit/InitialShader"
 {
     Properties {
         _Pattern("Pattern", 2D) = "white" {}
-        _PatternWidth("PatternWidth", int) = 300
-        _PatternHeight("PatternHeight", int) = 300
+        _PatternWidth("PatternWidth", int) = 240
+        _PatternHeight("PatternHeight", int) = 240
         _PatternOffset("PatternOffset", int) = 0
     }
 

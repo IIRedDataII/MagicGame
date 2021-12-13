@@ -103,9 +103,9 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _PatternHeight: 300
+    - _PatternHeight: 240
     - _PatternOffset: 0
-    - _PatternWidth: 300
+    - _PatternWidth: 240
     - _ScreenHeight: 1080
     - _ScreenWidth: 1920
     - _SmoothnessTextureChannel: 0

@@ -1,11 +1,11 @@
-Shader "Unlit/MagicC7Shader"
+Shader "Unlit/MagicShader"
 {
     Properties {
         _CurrentColumn("Column", int) = 0
         _Heightmap("Heightmap", 2D) = "white" {}
         _Aether("Aether", 2D) = "white" {}
-        _PatternWidth("PatternWidth", int) = 300
-        _PatternHeight("PatternHeight", int) = 300
+        _PatternWidth("PatternWidth", int) = 240
+        _PatternHeight("PatternHeight", int) = 240
         _ScreenWidth("ScreenWidth", int) = 1920
         _ScreenHeight("ScreenHeight", int) = 1080
     }
@@ -37,7 +37,9 @@ Shader "Unlit/MagicC7Shader"
             {
                 if (abs(tex2D(_Heightmap, float2(uv.x - _PatternWidth / (float) _ScreenWidth, uv.y)).r) <= accuracy)
                     return tex2D(_Aether, float2(uv.x - _PatternWidth / (float) _ScreenWidth, uv.y));  // case: no limbo
-                return tex2D(_Aether, float2(pos.x % _PatternHeight / _ScreenWidth, (pos.y + _PatternHeight / 7.f * _CurrentColumn) % _PatternHeight / _ScreenHeight));    // case: limbo
+                
+                int number_of_columns = 8;
+                return tex2D(_Aether, float2(pos.x % _PatternWidth / _ScreenWidth, (pos.y + _PatternHeight / (float) number_of_columns * _CurrentColumn) % _PatternHeight / _ScreenHeight));    // case: limbo
             }
 
             float4 find_lookup(float2 pos, int layers, int layerDistance, float accuracy)
@@ -66,14 +68,14 @@ Shader "Unlit/MagicC7Shader"
 
                 float4 firstLookup = find_lookup(IN.vertex.xy, layers, layerDistance, 0.5f / _ScreenWidth);
                 if (empty_lookup(firstLookup))   // case: no first lookup found
-                    return fix_limbo(IN.vertex.xy, IN.localTexcoord.xy, 1.f / layers);  // case: ...
+                    return fix_limbo(IN.vertex.xy, IN.localTexcoord.xy, 1.f / layers);  // ...
                 
                 if (firstLookup.x < _PatternWidth * _CurrentColumn)
                     return tex2D(_Aether, firstLookup.zw);  // case: no second lookup needed, apply first lookup
                 
                 float4 secondLookup = find_lookup(firstLookup.xy, layers, layerDistance, 0.5f / _ScreenWidth);
                 if (empty_lookup(secondLookup))   // case: no second lookup found
-                    return fix_limbo(firstLookup.xy, firstLookup.zw, 1.f / layers);  // case: ...
+                    return fix_limbo(firstLookup.xy, firstLookup.zw, 1.f / layers);  // ...
                 
                 return tex2D(_Aether, secondLookup.zw); // case: second lookup needed, apply second lookup
             }

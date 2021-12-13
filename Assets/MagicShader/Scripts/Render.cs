@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public class Pattern : MonoBehaviour
+[ExecuteInEditMode]
+
+public class Render : MonoBehaviour
 {
     
     private const float Delay = 1f / 100f;
     private const int Speed = 10;
     
-    [SerializeField] private Material material;
+    [SerializeField] private RenderTexture renderTexture;
     [SerializeField] private Texture2D pattern;
     [SerializeField] private Texture2D[] patterns;
+    [SerializeField] private Material material;
     [SerializeField] private bool move;
 
     private int _patternWidth;
@@ -41,6 +44,11 @@ public class Pattern : MonoBehaviour
             }
             _timePassed += Time.deltaTime;
         }
+    }
+
+    private void OnRenderImage(RenderTexture source, RenderTexture destination)
+    {
+        Graphics.Blit(renderTexture, destination);
     }
 
     private void OnDestroy()
